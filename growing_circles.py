@@ -9,10 +9,17 @@ class Circle:
     """Hold data an methods for drawing a circle
     """
 
-    def __init__(self, pos: tuple, radius: int, color: tuple):
-        self.pos = pos
-        self.radius = radius
-        self.color = color
+    def __init__(self, surface_size: tuple[int, int]):
+        x = randint(0, surface_size[0]-1)
+        y = randint(0, surface_size[1]-1)
+        
+        # Max radius is reached when the radius reaches the left and the right
+        # side of the screen
+        self.max_radius = max(x, surface_size[0] - x)
+
+        self.pos = (x, y)
+        self.radius = 1
+        self.color = random_color()
 
     def draw(self, surface: pygame.Surface) -> None:
         pygame.draw.circle(surface, self.color, self.pos, self.radius)
@@ -24,7 +31,7 @@ class GrowingCircles:
 
     def __init__(self, resolution: tuple, num_circles: int = 5):
         pygame.init()
-        self.size = resolution
+        self.resolution = resolution
         self.num_circles = num_circles
         self.screen = pygame.display.set_mode(resolution, vsync=1)
         self.circles = []
@@ -32,15 +39,19 @@ class GrowingCircles:
         self._make_circles()
 
     def _make_circles(self) -> None:
-        for _ in range(self.num_circles):
-            x = randint(0, self.size[0]-1)
-            y = randint(0, self.size[1]-1)
-            radius = 1
-            color = random_color()
-
-            self.circles.append(Circle((x, y), radius, color))
+        missing = self.num_circles - len(self.circles)
+        for _ in range(missing):
+            self.circles.append(Circle((self.resolution)))
 
     def _update(self) -> None:
+        self.circles = list(filter(
+            lambda circ: True if circ.radius <= circ.max_radius else False,
+            self.circles))
+
+        # Are there enough circles?
+        if len(self.circles) < self.num_circles:
+            self._make_circles()
+
         for circle in self.circles:
             circle.radius += 1
 
@@ -57,7 +68,7 @@ class GrowingCircles:
             self.screen.fill(WHITE)
             self._draw()
             pygame.display.flip()
-            sleep(0.1)
+            sleep(0.01)
 
 
 def random_color() -> tuple:
