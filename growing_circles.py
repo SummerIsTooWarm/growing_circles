@@ -3,7 +3,7 @@ from time import sleep
 from random import randint
 import pygame
 
-WHITE = (255, 255, 255)
+WHITE = (255, 255, 255, 255)
 
 class Circle:
     """Hold data an methods for drawing a circle
@@ -27,7 +27,13 @@ class Circle:
         self.color = random_color()
 
     def draw(self, surface: pygame.Surface) -> None:
-        pygame.draw.circle(surface, self.color, self.pos, self.radius)
+        # pygame.draw will not draw alpha
+        # Workaround: using a helper surface with alpha and blitting it
+        helper_surface = pygame.Surface((self.radius*2, self.radius*2), flags=pygame.HWSURFACE)
+        helper_surface.fill(WHITE)
+        pygame.draw.circle(helper_surface, self.color, (self.radius, self.radius), self.radius)
+        helper_surface.set_alpha(127)
+        surface.blit(helper_surface, (self.pos[0]-self.radius, self.pos[1]-self.radius))
 
 
 class GrowingCircles:
@@ -73,7 +79,6 @@ class GrowingCircles:
             self.screen.fill(WHITE)
             self._draw()
             pygame.display.flip()
-            sleep(0.01)
 
 
 def random_color() -> tuple:
