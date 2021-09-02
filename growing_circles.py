@@ -1,7 +1,11 @@
 import sys
 from time import sleep
 from random import randint
+
 import pygame
+
+from settings import Settings
+settings = Settings()
 
 WHITE = (255, 255, 255, 255)
 
@@ -23,7 +27,7 @@ class Circle:
         self.max_radius = max(distances)
 
         self.pos = (x, y)
-        self.radius = 1
+        self.radius = settings.initial_radius
         self.color = random_color()
 
     def draw(self, surface: pygame.Surface) -> None:
@@ -43,8 +47,7 @@ class GrowingCircles:
         pygame.init()
         self.resolution = resolution
         self.num_circles = num_circles
-        flags = pygame.HWSURFACE | pygame.FULLSCREEN | pygame.DOUBLEBUF
-        self.screen = pygame.display.set_mode(resolution, flags, vsync=1)
+        self.screen = pygame.display.set_mode(resolution, settings.screen_flags, vsync=1)
         self.circles = []
 
         self._make_circles()
@@ -64,7 +67,7 @@ class GrowingCircles:
             self._make_circles()
 
         for circle in self.circles:
-            circle.radius += 2
+            circle.radius += settings.radius_growth
 
     def _draw(self) -> None:
         for circle in self.circles:
@@ -86,8 +89,8 @@ def random_color() -> tuple:
 
 
 def main():
-    size = (1920, 1080)
-    app = GrowingCircles(size)
+    size = (settings.screen_width, settings.screen_height)
+    app = GrowingCircles(size, settings.num_circles)
     app.run()
 
 
