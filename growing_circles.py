@@ -29,10 +29,9 @@ class Circle:
     def draw(self, surface: pygame.Surface) -> None:
         # pygame.draw will not draw alpha
         # Workaround: using a helper surface with alpha and blitting it
-        helper_surface = pygame.Surface((self.radius*2, self.radius*2), flags=pygame.HWSURFACE)
-        helper_surface.fill(WHITE)
-        pygame.draw.circle(helper_surface, self.color, (self.radius, self.radius), self.radius)
+        helper_surface = pygame.Surface((self.radius*2, self.radius*2), flags=pygame.SRCALPHA)
         helper_surface.set_alpha(127)
+        pygame.draw.circle(helper_surface, self.color, (self.radius, self.radius), self.radius)
         surface.blit(helper_surface, (self.pos[0]-self.radius, self.pos[1]-self.radius))
 
 
