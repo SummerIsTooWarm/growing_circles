@@ -12,10 +12,15 @@ class Circle:
     def __init__(self, surface_size: tuple[int, int]):
         x = randint(0, surface_size[0]-1)
         y = randint(0, surface_size[1]-1)
-        
-        # Max radius is reached when the radius reaches the left and the right
-        # side of the screen
-        self.max_radius = max(x, surface_size[0] - x)
+
+        # Max radius is reached when the circle touches all corners
+        corners = [(0, 0),
+                   (0, surface_size[1]),
+                   (surface_size[0], surface_size[1]),
+                   (surface_size[0], 0)]
+        distances = [int(((corn[0]-x)**2 + (corn[1]-y)**2)**0.5)
+                     for corn in corners]
+        self.max_radius = max(distances)
 
         self.pos = (x, y)
         self.radius = 1
@@ -53,7 +58,7 @@ class GrowingCircles:
             self._make_circles()
 
         for circle in self.circles:
-            circle.radius += 1
+            circle.radius += 2
 
     def _draw(self) -> None:
         for circle in self.circles:
