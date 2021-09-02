@@ -43,7 +43,8 @@ class GrowingCircles:
         pygame.init()
         self.resolution = resolution
         self.num_circles = num_circles
-        self.screen = pygame.display.set_mode(resolution, vsync=1)
+        flags = pygame.HWSURFACE | pygame.FULLSCREEN | pygame.DOUBLEBUF
+        self.screen = pygame.display.set_mode(resolution, flags, vsync=1)
         self.circles = []
 
         self._make_circles()
@@ -85,7 +86,7 @@ def random_color() -> tuple:
 
 
 def main():
-    size = (1280, 720)
+    size = (1920, 1080)
     app = GrowingCircles(size)
     app.run()
 
