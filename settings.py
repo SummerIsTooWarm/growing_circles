@@ -1,6 +1,12 @@
+"""
+This module contains settings for gorwing_circles
+"""
 import pygame
 
 class Settings:
+    """
+    Contains settings
+    """
     def __init__(self):
         # Screen
         self.screen_width = 1920

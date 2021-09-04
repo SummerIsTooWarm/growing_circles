@@ -1,5 +1,7 @@
+"""
+This module contains logic for growing circles
+"""
 import sys
-from time import sleep
 from random import randint
 
 import pygame
@@ -10,7 +12,8 @@ settings = Settings()
 WHITE = (255, 255, 255, 255)
 
 class Circle:
-    """Hold data an methods for drawing a circle
+    """
+    Holds data an methods for drawing a circle
     """
 
     def __init__(self, surface_size: tuple[int, int]):
@@ -31,6 +34,12 @@ class Circle:
         self.color = random_color()
 
     def draw(self, surface: pygame.Surface) -> None:
+        """
+        Draws a single circle on a helper surface and blits it to the main one
+
+        Args:
+            surface (pygame.Surface): Surface to blit the circle to
+        """
         # pygame.draw will not draw alpha
         # Workaround: using a helper surface with alpha and blitting it
         helper_surface = pygame.Surface((self.radius*2, self.radius*2), flags=pygame.SRCALPHA)
@@ -40,7 +49,8 @@ class Circle:
 
 
 class GrowingCircles:
-    """Growing Circles on a pygame Screen
+    """
+    Growing Circles on a pygame Screen
     """
 
     def __init__(self, resolution: tuple, num_circles: int = 5):
@@ -74,6 +84,9 @@ class GrowingCircles:
             circle.draw(self.screen)
 
     def run(self) -> None:
+        """
+        Runs the application
+        """
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -85,10 +98,19 @@ class GrowingCircles:
 
 
 def random_color() -> tuple:
+    """
+    Generates a random color without alpha
+
+    Returns:
+        tuple: tuple representing (R, G, B)
+    """
     return (randint(0, 255), randint(0, 255), randint(0, 255))
 
 
 def main():
+    """
+    Run the application if the module itself is run
+    """
     size = (settings.screen_width, settings.screen_height)
     app = GrowingCircles(size, settings.num_circles)
     app.run()
