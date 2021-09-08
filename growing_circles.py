@@ -62,6 +62,9 @@ class GrowingCircles:
 
         self._make_circles()
 
+        print(pygame.display.Info())
+        sys.exit()
+
     def _make_circles(self) -> None:
         missing = self.num_circles - len(self.circles)
         for _ in range(missing):
