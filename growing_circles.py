@@ -39,13 +39,13 @@ class Circle:
         self.radius = settings.initial_radius
         self.color = random_color()
 
-    def draw(self) -> None:
+    def get_circle(self, batch: pyglet.graphics.Batch) -> pyglet.shapes.Circle:
         """
         Draws a single circle
         """
-        circle = pyglet.shapes.Circle(self.x, self.y, self.radius, color=self.color)
+        circle = pyglet.shapes.Circle(self.x, self.y, self.radius, color=self.color, batch=batch)
         circle.opacity = 128
-        circle.draw()
+        return circle
 
 
 class GrowingCircles:
@@ -79,8 +79,11 @@ class GrowingCircles:
             circle.radius += settings.radius_growth
 
     def draw(self) -> None:
+        batch = pyglet.graphics.Batch()
+        to_draw = []
         for circle in self.circles:
-            circle.draw()
+            to_draw.append(circle.get_circle(batch))
+        batch.draw()
 
 
 def random_color() -> tuple:
